@@ -39,7 +39,7 @@ def smooth_data(data,degree,dropVals=False):
 	"""performs moving triangle smoothing with a variable degree."""
 	"""note that if dropVals is False, output length will be identical
 	to input length, but with copies of data at the flanking regions"""
-	triangle = np.array(range(degree)+[degree]+range(degree)[::-1])+1
+	triangle = np.array(list(range(degree))+[degree]+list(range(degree))[::-1])+1
 	smoothed = []
 	for i in range(degree,len(data)-degree*2):
 		point = data[i:i+len(triangle)]*triangle

@@ -31,8 +31,8 @@ import warnings
 import sys
 from multiprocessing import Pool
 
-from spectra import spectrum
-import MLFittingRoutine as ML
+from .spectra import spectrum
+from . import MLFittingRoutine as ML
 
 def Cost(yData,yTheory):
     '''
@@ -49,7 +49,7 @@ def evaluate(args):
     parametersToFit = arguments[2:-2] 
     bFitPar, spectr = ML.MLfit(arguments[0],arguments[1],
                                 parametersToFit,arguments[-2],**kw)
-    print 'Eval_ML COmplete'
+    print('Eval_ML COmplete')
 	
     costValue = Cost(arguments[1],spectr)
     #sys.stdout.flush()
@@ -67,7 +67,7 @@ def RRFit(xdata,ydata,initParams,paramBools,noEvals,**kw):
 	kwargs must be dictionary 
 	"""
 	
-    print '\n\nStarting Random Restart Fitting Routine'
+    print('\n\nStarting Random Restart Fitting Routine')
     x = N.array(xdata)
     y = N.array(ydata)
     
@@ -145,7 +145,7 @@ def RRFit(xdata,ydata,initParams,paramBools,noEvals,**kw):
     GammaVals = N.zeros(noEvals)
     GammaVals[0] = initParams[10]       
     
-    for i in xrange(1,noEvals):
+    for i in range(1,noEvals):
         BfieldVals[i]     = initParams[2] + errBfield*R.uniform(-1,1)
         NTempVals[i]      = initParams[3] + errNTemp*R.uniform(-1,1)
         cellLengthVals[i] = initParams[4] + errcellLength*R.uniform(-1,1)
@@ -163,12 +163,12 @@ def RRFit(xdata,ydata,initParams,paramBools,noEvals,**kw):
                                   DopTempVals[k],Theta0Vals[k],PolVals[k],ShiftVals[k],
                                   GammaVals[k],initParams[11],initParams[12],
                                   initParams[13],initParams[14],initParams[15],
-                                  paramBools,k, kw) for k in xrange(noEvals))
+                                  paramBools,k, kw) for k in range(noEvals))
 								  )
     Results = res.get()
     po.close()
     po.join()
-    print 'RR calculation complete'
+    print('RR calculation complete')
 
     #Find best fit
     Results = N.array(Results)

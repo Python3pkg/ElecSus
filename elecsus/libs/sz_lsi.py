@@ -25,7 +25,7 @@ Calls jz from ang_mom.
 
 from numpy import identity
 from scipy.linalg import kron
-from ang_mom import jz
+from .ang_mom import jz
 
 def sz(L,S,I):
     Sz=jz(S)

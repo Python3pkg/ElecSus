@@ -60,7 +60,7 @@ def help_dcols():
 	from matplotlib.patches import Rectangle
 	fig, axes = subplots(4,3)
 	i=0
-	print axes
+	print(axes)
 	for axA in axes:
 		for ax in axA:
 			patch = Rectangle([0,0],1,1,color=cols[i])

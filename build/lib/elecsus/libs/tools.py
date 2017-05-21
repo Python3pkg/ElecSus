@@ -21,7 +21,7 @@ def derivative(xs,f):
     '''Numerical derivative. Last point is simply a copy of previous'''
     flen = len(f)
     df=zeros(flen)
-    for y in xrange(flen-1):
+    for y in range(flen-1):
         dx = xs[y+1]-xs[y]
         df[y] = (f[y+1]-f[y])/dx
     df[-1] = df[-2] # Last point is set to the value of the one before
@@ -31,15 +31,15 @@ def smoother(xData,yData,factor):
     '''Function to smooth over the data'''
 
     oldlength = len(xData)
-    print 'Original data length:', oldlength
+    print('Original data length:', oldlength)
     truncation = oldlength % factor
     if truncation:
-        print 'Data truncated at the end by', truncation, 'points.'
+        print('Data truncated at the end by', truncation, 'points.')
         xData = xData[0:-truncation]
         yData = yData[0:-truncation]
 
     newlength = (oldlength-truncation)/factor
-    print 'Smoothed data length:', newlength
+    print('Smoothed data length:', newlength)
     smoothedX = zeros(newlength)
     smoothedY = zeros(newlength)
 
@@ -54,8 +54,8 @@ def smoother(xData,yData,factor):
 def fileOutput(filename,x,y):
     """Outputs two arrays or lists as columns in a csv file"""
     f_csv = open(filename, 'w')
-    for i in xrange(len(x)):
-        print >> f_csv, x[i], ',', y[i]
+    for i in range(len(x)):
+        print(x[i], ',', y[i], file=f_csv)
     f_csv.close()
     return None
 
@@ -64,7 +64,7 @@ def read_in_twoColumn(filename):
     try:
         data_file = open(filename + '.csv','r')
     except:
-        print 'Data file not found.'
+        print('Data file not found.')
         exit(1)
     xData = []
     yData = []
@@ -76,11 +76,11 @@ def read_in_twoColumn(filename):
     xData = array(xData)
     yData = array(yData)
     if amax(abs(xData)) > 500.0:
-        print "The data file detuning values are very large (The detuning axis should be given in GHz)."
-        convert = raw_input("Do you want to convert the detuning axis from MHz to GHz? (y/n): ")
+        print("The data file detuning values are very large (The detuning axis should be given in GHz).")
+        convert = input("Do you want to convert the detuning axis from MHz to GHz? (y/n): ")
         if convert in ['n','N','no','No','NO','nO']:
-            print "This may use large amounts of memory and calculation time"
-            contin = raw_input('Continue? (y/n): ')
+            print("This may use large amounts of memory and calculation time")
+            contin = input('Continue? (y/n): ')
             if contin in ['n','N','no','No','NO']:
                 exit(0)
         elif not (convert in ['n','N','no','No','NO','nO']):

@@ -95,8 +95,8 @@ def main(argv):
 		# so warn user of errors and exit if found.
 		runcardPath = runcardPath.replace("\\", "/")
 		if any(es in runcardPath for es in esc_seq):
-			print 'There are escape characters in the runcard file name string.\
-					\nUse Forward slashes (/) to separate directories instead of back slashes.'
+			print('There are escape characters in the runcard file name string.\
+					\nUse Forward slashes (/) to separate directories instead of back slashes.')
 			sys.exit(1)
 			
 		# if file is in other directory, add to sys.path
@@ -108,19 +108,19 @@ def main(argv):
 		RCFNstripped = runcardFilename.rstrip('.py')
 		code1 = 'import ' + RCFNstripped + ' as G'
 		try:
-			exec code1 in globals()#Import user specified run card
+			exec(code1, globals())#Import user specified run card
 		except:
-			print 'Run card file not recognised.'
+			print('Run card file not recognised.')
 			sys.exit(1)
 	else:
-		print 'Run card file name must be specified. Exiting Python...' 
+		print('Run card file name must be specified. Exiting Python...') 
 		sys.exit(1)
 
-	print '\n'
+	print('\n')
 	banner = open(os.path.join(cmd_subfolder,'NOTICE'),'r')
 	for line in banner: #This loop prints the banner to the terminal
-		print line,
-	print '\n\n'
+		print(line, end=' ')
+	print('\n\n')
 	banner.close()
 
 	
@@ -137,9 +137,9 @@ def main(argv):
 		)
 
 	if TRA == 'D1': #If specified D-line is D1.
-		print 'Calculating D1 spectrum...\n' #Tell user program is running.
+		print('Calculating D1 spectrum...\n') #Tell user program is running.
 	elif TRA == 'D2':					   
-		print 'Calculating D2 spectrum...\n'
+		print('Calculating D2 spectrum...\n')
 
 	#Stop warnings about casting complex numbers
 	warnings.simplefilter("ignore")
@@ -169,7 +169,7 @@ def main(argv):
 		XMHz = X*1.0e3 #Detuning in MHz
 		Spec = spectra.spectrum(XMHz,ELE,SPE,BF,NDT,CL,R85,DT,T0,POL,SHI,GAM,
 								CB,TRA,PRE,K40,K41)
-		print 'Calculation complete.'
+		print('Calculation complete.')
 	else: #If a fit to experimental data was requested
 		try:
 			xdata, ydata = read_in_twoColumn(DAT)
@@ -179,12 +179,12 @@ def main(argv):
 				xdata, ydata = read_in_twoColumn(os.path.join(runcardDir,DAT))
 				file_read_success = True
 			except:
-				print 'Data file not found. Check file exists in specified location with name: ', runcardFilename
+				print('Data file not found. Check file exists in specified location with name: ', runcardFilename)
 				sys.exit(1)
 			
 		startTime = timing()
 		if SMB:
-			print '\nData binned for faster fitting.\n'
+			print('\nData binned for faster fitting.\n')
 			#Take average of local points (low pass filter).
 			xdata, ydata = smoother(xdata,ydata,SMF)
 		
@@ -198,17 +198,17 @@ def main(argv):
 		# Call different fitting routines		
 		if FT == 'Marquardt-Levenberg':
 			import MLFittingRoutine as FR
-			print '\nPerfoming Marquardt-Levenberg fitting routine.'
+			print('\nPerfoming Marquardt-Levenberg fitting routine.')
 			optParams, Spec = FR.MLfit(xdata,ydata,parameters,
 													 paramBoolList)
 		elif FT == 'Simulated annealing':
 			import SAFittingRoutine as FR
-			print '\nPerforming fitting by simulated annealing.'
+			print('\nPerforming fitting by simulated annealing.')
 			optParams, Spec = FR.SAFit(xdata,ydata,parameters,
 													 paramBoolList)
 		else:
 			import RRFittingRoutine as FR
-			print '\nPerforming fitting by random-restart hill climbing method.'
+			print('\nPerforming fitting by random-restart hill climbing method.')
 			#The more parameters to fit, the more evaluations we need to do.
 			factor = sum(paramBoolList) 
 			evaluationNumber = factor**2 + 5 #integer
@@ -234,36 +234,36 @@ def main(argv):
 		for par in parameterLabels:
 			if i == 2:
 				optParams[i] = optParams[i]*1000.0
-				print >> f_Parameters, parameterLabels[i], optParams[i]
+				print(parameterLabels[i], optParams[i], file=f_Parameters)
 			elif (i==3 and ELE=='Rb') or i==6:
 				optParams[i] = optParams[i]*100.0
-				print >> f_Parameters, parameterLabels[i], optParams[i]
+				print(parameterLabels[i], optParams[i], file=f_Parameters)
 			elif i == 4 and CB:
-				print >> f_Parameters, parameterLabels[i],\
-						 "Reservoir temperature (constrained)"
+				print(parameterLabels[i],\
+						 "Reservoir temperature (constrained)", file=f_Parameters)
 			elif i == 5 and (SPE in ['Ix','Iy','S1','S2']):
 				optParams[i] = optParams[i]*180.0
-				print >> f_Parameters, parameterLabels[i], optParams[i]
+				print(parameterLabels[i], optParams[i], file=f_Parameters)
 			elif (i in [0,1,4,7,8]):
-				print >> f_Parameters, parameterLabels[i], optParams[i]
+				print(parameterLabels[i], optParams[i], file=f_Parameters)
 			elif (i in [9,10]) and ELE == 'K':
-				print >> f_Parameters, parameterLabels[i], parameters[i+5]
+				print(parameterLabels[i], parameters[i+5], file=f_Parameters)
 			i += 1
 		numDenVal = numDenRb(optParams[1]+273.15)/1.0e18
 		#Find root mean square deviation
 		RMS = sqrt(((ydata - Spec)**2).sum()/float(len(ydata)))
-		print >> f_Parameters, 'Number density of vapour =', numDenVal,\
-				 'x 10^12 cm^-3'
-		print >> f_Parameters, "\n\n"
-		print >> f_Parameters, "RMS deviation of experimental data and theory =", RMS
+		print('Number density of vapour =', numDenVal,\
+				 'x 10^12 cm^-3', file=f_Parameters)
+		print("\n\n", file=f_Parameters)
+		print("RMS deviation of experimental data and theory =", RMS, file=f_Parameters)
 		f_Parameters.close()
 		#Print parameters to screen
 		os.system('cls' if os.name == 'nt' else 'clear') #Clear the terminal
-		print ''
+		print('')
 		i=0
 		for Boolian in paramBoolList:
 			if Boolian:
-				print parameterLabels[i], optParams[i]
+				print(parameterLabels[i], optParams[i])
 			i+=1
 
 	# Output theory to csv file
@@ -276,7 +276,7 @@ def main(argv):
 		fileOutput(os.path.join(outputDirectory,os.path.split(DAT)[1]+'_residuals.csv'),
 				   X,residuals)
 	
-	print '\n\nTime taken:', timing() - startTime
+	print('\n\nTime taken:', timing() - startTime)
 
 	if SB:
 		PlotName = os.path.join(outputDirectory,os.path.split(DAT)[1]+'_output'+PFT)

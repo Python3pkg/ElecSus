@@ -25,7 +25,7 @@ Can. Metall. Q. 23 (1984) 309-313.
 
 """
 
-from FundamentalConstants import kB
+from .FundamentalConstants import kB
 from numpy import log10
 
 def CalcNumberDensity(T,atom):

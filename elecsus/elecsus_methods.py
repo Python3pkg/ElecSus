@@ -36,14 +36,14 @@ from shutil import copyfile
 from numpy import arange, zeros, array, sqrt
 
 # import elecsus modules
-from libs import spectra
-from libs import runcardCheck
-from libs.tools import fileOutput, plotOutput, smoother, read_in_twoColumn
-from libs.numberDensityEqs import *
+from .libs import spectra
+from .libs import runcardCheck
+from .libs.tools import fileOutput, plotOutput, smoother, read_in_twoColumn
+from .libs.numberDensityEqs import *
 
-import libs.MLFittingRoutine as ML
-import libs.SAFittingRoutine as SA
-import libs.RRFittingRoutine as RR
+from . import libs.MLFittingRoutine as ML
+from . import libs.SAFittingRoutine as SA
+from . import libs.RRFittingRoutine as RR
 
 if os.name == 'posix':
 	from time import time as timing #Timing for linux or apple
@@ -121,15 +121,15 @@ def fit_data(data,parameters,paramBoolList,experimental_datatype='S0',fit_algori
 	
 	# Call different fitting routines        
 	if fit_algorithm == 'Marquardt-Levenberg':
-		print '\nPerfoming Marquardt-Levenberg fitting routine.'
+		print('\nPerfoming Marquardt-Levenberg fitting routine.')
 		optParams, Spec = ML.MLfit(xdata,ydata,parameters_new,
 												 paramBoolList,**kw)
 	elif fit_algorithm == 'Simulated Annealing':
-		print '\nPerforming fitting by simulated annealing.'
+		print('\nPerforming fitting by simulated annealing.')
 		optParams, Spec = SA.SAFit(xdata,ydata,parameters_new,
 												 paramBoolList,**kw)
 	else:
-		print '\nPerforming fitting by Random-Restart hill climbing method.'
+		print('\nPerforming fitting by Random-Restart hill climbing method.')
 		#The more parameters to fit, the more evaluations we need to do.
 		factor = sum(paramBoolList) 
 		evaluationNumber = factor**2 + 5 #integer
@@ -166,6 +166,6 @@ def fit_data(data,parameters,paramBoolList,experimental_datatype='S0',fit_algori
 	optParams_out[2:12] = optParams[2:12]
 	optParams_out[12:] = optParams[14:]
 	
-	print 'Optimum parameters found !'
+	print('Optimum parameters found !')
 	
 	return optParams_out, RMS

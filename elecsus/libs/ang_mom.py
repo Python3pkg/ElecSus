@@ -22,7 +22,7 @@ Jz called by fs_hfs.py and sz_lsi.py
 """
 
 from numpy import transpose,dot
-import ang_mom_p
+from . import ang_mom_p
 
 def jx(jj):
     jp=ang_mom_p.jp(jj)

@@ -20,11 +20,11 @@ Updated 2015-09-03 - added keyword arg support - Author: JK"""
 
 import numpy as N
 import random as R
-import MLFittingRoutine as ML
+from . import MLFittingRoutine as ML
 import warnings
 
 from multiprocessing import Pool
-from spectra import spectrum
+from .spectra import spectrum
 
 def Cost(yData,yTheory):
 	'''
@@ -102,8 +102,8 @@ def SAFit(xdata,ydata,initParams,paramBools,noEvals=1000,verbose=False,**kw):
 	else:
 		errGamma	  = 0.0
 
-	print ''
-	print 'Making initial evaluations for scaling parameter\n',
+	print('')
+	print('Making initial evaluations for scaling parameter\n', end=' ')
 
 	#Fill arrays of random values scattered around given start
 	BfieldVals		= N.zeros(noEvals)
@@ -149,7 +149,7 @@ def SAFit(xdata,ydata,initParams,paramBools,noEvals=1000,verbose=False,**kw):
 								  NTempVals[k],cellLengthVals[k],Rb85Vals[k],
 								  DopTempVals[k],Theta0Vals[k],PolVals[k],ShiftVals[k],
 								  GammaVals[k],initParams[11],initParams[12],
-								  initParams[13],initParams[14],initParams[15],k) for k in xrange(noEvals)))
+								  initParams[13],initParams[14],initParams[15],k) for k in range(noEvals)))
 	
 	Result = res.get()
 	po.close()
@@ -228,33 +228,33 @@ def SAFit(xdata,ydata,initParams,paramBools,noEvals=1000,verbose=False,**kw):
 			bestCostValue  = newCostValue
 		DeltaCost = costValue - newCostValue
 		if verbose:
-			print ''
-			print 'Current cost:', newCostValue
-			print 'Change in cost:', -1*DeltaCost
-			print 'T parameter: ', T
-			print ''
+			print('')
+			print('Current cost:', newCostValue)
+			print('Change in cost:', -1*DeltaCost)
+			print('T parameter: ', T)
+			print('')
 			if paramBools[0]:
-				print 'magnetic field		= ', tryBfield, 'Gauss'
+				print('magnetic field		= ', tryBfield, 'Gauss')
 			if paramBools[1]:
-				print 'Reservoir temperature = ', tryNTemp, 'degrees Celsius'
+				print('Reservoir temperature = ', tryNTemp, 'degrees Celsius')
 			if paramBools[2]:
-				print 'Cell length		   = ', trycellLength*1000.0, 'mm'
+				print('Cell length		   = ', trycellLength*1000.0, 'mm')
 			if paramBools[3]:
-				print 'Rubidium-85 fraction  = ', tryRb85*100.0, '%'
+				print('Rubidium-85 fraction  = ', tryRb85*100.0, '%')
 			if paramBools[4]:
-				print 'Doppler temperature   = ', tryDopTemp, 'degrees Celsius'
+				print('Doppler temperature   = ', tryDopTemp, 'degrees Celsius')
 			if paramBools[5]:
-				print 'Polarization angle	= ', tryTheta0, 'pi radians'
+				print('Polarization angle	= ', tryTheta0, 'pi radians')
 			if paramBools[6]:
-				print 'Sigma minus fraction  = ', tryPol*100, '%'
+				print('Sigma minus fraction  = ', tryPol*100, '%')
 			if paramBools[7]:
-				print 'Global Shift		  = ', tryShift, 'MHz'
+				print('Global Shift		  = ', tryShift, 'MHz')
 			if paramBools[8]:
-				print 'Buffer gas broadening = ', tryGamma, 'MHz'
+				print('Buffer gas broadening = ', tryGamma, 'MHz')
 		prob = N.exp(DeltaCost/(k*T))
 		if verbose:
-			print 'Probability that these will be accepted (>1 == 1):', prob
-			print ''
+			print('Probability that these will be accepted (>1 == 1):', prob)
+			print('')
 
 		if DeltaCost >= 0:
 			NTemp = tryNTemp
@@ -268,8 +268,8 @@ def SAFit(xdata,ydata,initParams,paramBools,noEvals=1000,verbose=False,**kw):
 			Gamma = tryGamma
 			costValue = newCostValue
 			if verbose:
-				print 'Values accepted.'
-				print '\n\n'
+				print('Values accepted.')
+				print('\n\n')
 		elif prob > R.random():
 			NTemp = tryNTemp
 			Rb85 = tryRb85
@@ -286,20 +286,20 @@ def SAFit(xdata,ydata,initParams,paramBools,noEvals=1000,verbose=False,**kw):
 			if prob_j == breakThreshold:
 				prob_j = 0
 			if verbose:
-				print 'Values accepted.'
-				print '\n\n'
+				print('Values accepted.')
+				print('\n\n')
 		else:
 			probabilities[prob_j] = 0.0
 			prob_j += 1
 			if prob_j == breakThreshold:
 				prob_j = 0
 			if verbose:
-				print 'Values rejected.'
-				print '\n\n'
+				print('Values rejected.')
+				print('\n\n')
 		T = T/(1+(Beta*T)) #Lundy's Method
 		if (N.sum(probabilities) < 0.9) or (T < Tthreshold): #No jumps up hill for a while
-			print '.. Simulated annealing completed ..'
-			print '.... Switching to downhill fit ....\n'
+			print('.. Simulated annealing completed ..')
+			print('.... Switching to downhill fit ....\n')
 			break
 
 	bestParams = [initParams[0],initParams[1],bestBfield,bestNTemp,
@@ -317,12 +317,12 @@ def SAFit(xdata,ydata,initParams,paramBools,noEvals=1000,verbose=False,**kw):
 		if newCostValue < bestCostValue:
 			bestParams = Poptimal
 			FinalTheory = Spectr
-			print 'Downhill fit converged successfully.\n'
+			print('Downhill fit converged successfully.\n')
 		else:
-			print 'Downhill fit did not find further improvement. Continuing with simulated annealing result.\n'
+			print('Downhill fit did not find further improvement. Continuing with simulated annealing result.\n')
 			
 	except:
-		print 'Downhill fit failed to converge. Continuing with simulated annealing result.\n'
+		print('Downhill fit failed to converge. Continuing with simulated annealing result.\n')
 
 	FinalTheory = spectrum(x,*bestParams)
 	return bestParams, FinalTheory

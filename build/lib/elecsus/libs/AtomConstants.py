@@ -23,7 +23,7 @@ Called by EigenSystem.py
 """
 
 from numpy import pi, sqrt
-from FundamentalConstants import *
+from .FundamentalConstants import *
 
 class Rb85:
     """Constants relating to the rubidium-85 atom"""

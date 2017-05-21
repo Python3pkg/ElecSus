@@ -19,14 +19,14 @@ import time
 from elecsus.elecsus_gui import __version__
 
 
-print "\n\n NOTE: wxPython 2.8 needs to be installed for the\n\
+print("\n\n NOTE: wxPython 2.8 needs to be installed for the\n\
 GUI part of this program to work! It is not currently possible\n\
 to install this automatically through setuptools / pip / easy_install.\n\
 \
 This is included with Enthought Canopy. For Windows systems, this is all that's needed.\
 For Linux systems, wxPython is not supported in Canopy and needs to be installed separately.\
 To install wxPython, please visit the wxPython website:\n\
-http://www.wxpython.org/download.php \n\n"
+http://www.wxpython.org/download.php \n\n")
 
 time.sleep(1)
 

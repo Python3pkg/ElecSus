@@ -27,7 +27,7 @@ import time
 
 
 def MLfit(xdata,ydata,initParams,paramBools,verbose=True,**kw):
-    from spectra import spectrum
+    from .spectra import spectrum
     
     x = array(xdata)
     y = array(ydata)
@@ -99,13 +99,13 @@ def MLfit(xdata,ydata,initParams,paramBools,verbose=True,**kw):
     spectrumString = spectrumString + "initParams[11],initParams[12],initParams[13],initParams[14],initParams[15])"
     code = functionString + "\n    " + spectrumString + "\n    " + "return spec"
 
-    exec code in locals()
+    exec(code, locals())
 
     Popt, Pcov, infodict, errmsg, ier  = curve_fit(ForFit,x,y,initialGuesses,full_output=True,**kw)
-    if verbose: print 'Curvefit routine finished'
+    if verbose: print('Curvefit routine finished')
 	
     spectr = ForFit(x,*Popt)
-    if verbose: print 'Spectrum generated'
+    if verbose: print('Spectrum generated')
     #print 'Len spectra: ',len(spectr)
 	
     bestFitParams = list(initParams)
@@ -119,6 +119,6 @@ def MLfit(xdata,ydata,initParams,paramBools,verbose=True,**kw):
             bestFitParams[j+2] = Popt[i]
             i+=1
         j+=1
-    if verbose: print 'Fit params stored'
+    if verbose: print('Fit params stored')
 
     return bestFitParams, spectr

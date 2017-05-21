@@ -26,12 +26,12 @@ Updated 2015-12-15 JK
 from numpy import zeros,sqrt,pi,dot,exp,sin,cos,array,amax,arange,concatenate
 from scipy.special import wofz
 from scipy.interpolate import interp1d
-from FundamentalConstants import *
-from numberDensityEqs import *
-from tools import derivative
+from .FundamentalConstants import *
+from .numberDensityEqs import *
+from .tools import derivative
 
-import EigenSystem as ES
-import AtomConstants as AC
+from . import EigenSystem as ES
+from . import AtomConstants as AC
 
 # Default values for parameters
 p_dict_defaults = {'Elem':'Rb', 'Dline':'D2', 'Bfield':0., 'T':20., 'GammaBuf':0., 'shift':0.,
@@ -50,10 +50,10 @@ def FreqStren(groundLevels,excitedLevels,groundDim,
 		bottom = 1
 		top = groundDim + 1
 	if Dline=='D1':
-		interatorList = xrange(groundDim)
+		interatorList = range(groundDim)
 	elif Dline=='D2':
-		interatorList = xrange(groundDim,excitedDim)
-	for gg in xrange(groundDim):
+		interatorList = range(groundDim,excitedDim)
+	for gg in range(groundDim):
 		for ee in interatorList:
 			cleb = dot(groundLevels[gg][1:],excitedLevels[ee][bottom:top]).real
 			cleb2 = cleb*cleb
@@ -88,13 +88,13 @@ def add_voigt(d,DoppTemp,atomMass,wavenumber,gamma,voigtwidth,
 	#Add contributions from all transitions to user defined detuning axis
 	lab = zeros(xpts)
 	ldisp = zeros(xpts)
-	for line in xrange(ltransno+1):
+	for line in range(ltransno+1):
 		xc = lenergy[line]
 		lab += lstrength[line]*f_ab(2.0*pi*(d-xc)*1.0e6)
 		ldisp += lstrength[line]*f_disp(2.0*pi*(d-xc)*1.0e6)
 	rab = zeros(xpts)
 	rdisp = zeros(xpts)
-	for line in xrange(rtransno+1):
+	for line in range(rtransno+1):
 		xc = renergy[line]
 		rab += rstrength[line]*f_ab(2.0*pi*(d-xc)*1.0e6)
 		rdisp += rstrength[line]*f_disp(2.0*pi*(d-xc)*1.0e6)
@@ -144,47 +144,47 @@ def calc_chi(X, p_dict):
 	"""
 	
 	# get parameters from dictionary
-	if 'Elem' in p_dict.keys():
+	if 'Elem' in list(p_dict.keys()):
 		Elem = p_dict['Elem']
 	else:
 		Elem = p_dict_defaults['Elem']
-	if 'Dline' in p_dict.keys():
+	if 'Dline' in list(p_dict.keys()):
 		Dline = p_dict['Dline']
 	else:
 		Dline = p_dict_defaults['Dline']
-	if 'T' in p_dict.keys():
+	if 'T' in list(p_dict.keys()):
 		T = p_dict['T']
 	else:
 		T = p_dict_defaults['T']
-	if 'Bfield' in p_dict.keys():
+	if 'Bfield' in list(p_dict.keys()):
 		Bfield = p_dict['Bfield']
 	else:
 		Bfield = p_dict_defaults['Bfield']
-	if 'GammaBuf' in p_dict.keys():
+	if 'GammaBuf' in list(p_dict.keys()):
 		GammaBuf = p_dict['GammaBuf']
 	else:
 		GammaBuf = p_dict_defaults['GammaBuf']
-	if 'shift' in p_dict.keys():
+	if 'shift' in list(p_dict.keys()):
 		shift = p_dict['shift']
 	else:
 		shift = p_dict_defaults['shift']
-	if 'Constrain' in p_dict.keys():
+	if 'Constrain' in list(p_dict.keys()):
 		Constrain = p_dict['Constrain']
 	else:
 		Constrain = p_dict_defaults['Constrain']
-	if 'rb85frac' in p_dict.keys():
+	if 'rb85frac' in list(p_dict.keys()):
 		rb85frac = p_dict['rb85frac']
 	else:
 		rb85frac = p_dict_defaults['rb85frac']
-	if 'DoppTemp' in p_dict.keys():
+	if 'DoppTemp' in list(p_dict.keys()):
 		DoppTemp = p_dict['DoppTemp']
 	else:
 		DoppTemp = p_dict_defaults['DoppTemp']
-	if 'K40frac' in p_dict.keys():
+	if 'K40frac' in list(p_dict.keys()):
 		K40frac = p_dict['K40frac']
 	else:
 		K40frac = p_dict_defaults['K40frac']
-	if 'K41frac' in p_dict.keys():
+	if 'K41frac' in list(p_dict.keys()):
 		K41frac = p_dict['K41frac']
 	else:
 		K41frac = p_dict_defaults['K41frac']
@@ -566,27 +566,27 @@ def get_spectra(X, p_dict, outputs=None):
 	# get some parameters from p dictionary
 	
 	# need in try/except or equiv.
-	if 'Elem' in p_dict.keys():
+	if 'Elem' in list(p_dict.keys()):
 		Elem = p_dict['Elem']
 	else:
 		Elem = p_dict_defaults['Elem']
-	if 'Dline' in p_dict.keys():
+	if 'Dline' in list(p_dict.keys()):
 		Dline = p_dict['Dline']
 	else:
 		Dline = p_dict_defaults['Dline']
-	if 'shift' in p_dict.keys():
+	if 'shift' in list(p_dict.keys()):
 		shift = p_dict['shift']
 	else:
 		shift = p_dict_defaults['shift']
-	if 'lcell' in p_dict.keys():
+	if 'lcell' in list(p_dict.keys()):
 		lcell = p_dict['lcell']
 	else:
 		lcell = p_dict_defaults['lcell']
-	if 'theta0' in p_dict.keys():
+	if 'theta0' in list(p_dict.keys()):
 		theta0 = p_dict['theta0']
 	else:
 		theta0 = p_dict_defaults['theta0']
-	if 'Pol' in p_dict.keys():
+	if 'Pol' in list(p_dict.keys()):
 		Pol = p_dict['Pol']
 	else:
 		Pol = p_dict_defaults['Pol']
@@ -768,4 +768,4 @@ def output_list():
 	GIMinus				Group index of left-circularly polarised light \n\
 	GIPlus				Group index of right-circularly polarised light \n\
 	"	
-	print tstr
+	print(tstr)

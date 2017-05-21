@@ -23,7 +23,7 @@ Called by EigenSystem
 
 from numpy import identity,dot
 from scipy.linalg import kron
-from ang_mom import jx,jy,jz
+from .ang_mom import jx,jy,jz
 
 def Hfs(L,S,I):
     """Provides the L dot S matrix (fine structure)"""

@@ -82,7 +82,7 @@ import os
 import sys
 import csv
 import time
-import cPickle as pickle
+import pickle as pickle
 
 import numpy as np
 import scipy as sp
@@ -98,15 +98,15 @@ elecsus_dir = os.path.dirname(__file__)
 try:
 	import wx
 except ImportError:
-	print 'wx cannot be imported'
-	print "wxPython 2.8 needs to be installed for this program to work! \n\
-It is not currently possible to install this automatically through pip/easy_install.\n"
+	print('wx cannot be imported')
+	print("wxPython 2.8 needs to be installed for this program to work! \n\
+It is not currently possible to install this automatically through pip/easy_install.\n")
 	if os.name == 'posix':
-		print "For Ubuntu/Debian, wxPython is not supported in Enthought Canopy.\n\
+		print("For Ubuntu/Debian, wxPython is not supported in Enthought Canopy.\n\
 Instead, use the system python distribution (/usr/bin/python) and install through apt:\n\n\
->    (sudo) apt-get install python-wxgtk2.8 python-wxtools wx2.8-i18n libwxgtk2.8-dev libgtk2.0-dev"
+>    (sudo) apt-get install python-wxgtk2.8 python-wxtools wx2.8-i18n libwxgtk2.8-dev libgtk2.0-dev")
 	else:
-		print 'For Windows, recommended install is using Enthought Canopy'
+		print('For Windows, recommended install is using Enthought Canopy')
 	raise ImportError
 
 #EXPERIMENTAL - advanced user interface
@@ -130,11 +130,11 @@ import wx.lib.newevent
 FitCompleteEvent, EVT_FIT_COMPLETE = wx.lib.newevent.NewEvent()
 
 # import elecsus modules
-import elecsus_methods as elecsus
-from libs import NOTICE
-from libs import data_proc
-from libs.durhamcolours import *
-from libs.durhamcolours import cols as durhamcols
+from . import elecsus_methods as elecsus
+from .libs import NOTICE
+from .libs import data_proc
+from .libs.durhamcolours import *
+from .libs.durhamcolours import cols as durhamcols
 
 #replace default matplotlib text and color sequence with durham colours
 from matplotlib import rc
@@ -144,17 +144,17 @@ rc('lines', linewidth=2)
 rc('axes', color_cycle=durhamcols)
 
 # preamble.py includes tooltip text, default values, labels...
-from libs.preamble import *
+from .libs.preamble import *
 
 def show_versions():
-	print 'Required for GUI::'
-	print '\tElecSus: ', __version__
-	print '\tWxPython: ', wx.__version__
-	print '\tNumpy: ', np.__version__
-	print '\tMatplotlib: ', mpl.__version__
-	print 'Required for fitting (in addition to above):'
-	print '\tScipy: ', sp.__version__
-	print '\tMultiprocessing: ', mproc.__version__
+	print('Required for GUI::')
+	print('\tElecSus: ', __version__)
+	print('\tWxPython: ', wx.__version__)
+	print('\tNumpy: ', np.__version__)
+	print('\tMatplotlib: ', mpl.__version__)
+	print('Required for fitting (in addition to above):')
+	print('\tScipy: ', sp.__version__)
+	print('\tMultiprocessing: ', mproc.__version__)
 	#print '\tPSUtil: ', psutil.__version__ ## future
 	
 	
@@ -226,7 +226,7 @@ class PlotSelectionPopUp(wx.PopupTransientWindow):
 		Gets the tick box values, updates the main plot and changes 
 		the menu items to match the popup box
 		"""
-		print 'Ticked Event'
+		print('Ticked Event')
 		
 		if self.plottype == 'Theory':
 			items = self.selection.GetChecked()
@@ -236,7 +236,7 @@ class PlotSelectionPopUp(wx.PopupTransientWindow):
 			for item in items:
 				self.mainwin.display_theory_curves[item] = True
 				self.mainwin.showTplotsSubMenu.GetMenuItems()[item].Check(True)
-			print self.mainwin.display_theory_curves
+			print(self.mainwin.display_theory_curves)
 		elif self.plottype == 'Fit':
 			items = self.selection.GetChecked()
 			self.mainwin.display_expt_curves = [False]*9
@@ -245,7 +245,7 @@ class PlotSelectionPopUp(wx.PopupTransientWindow):
 			for item in items:
 				self.mainwin.display_expt_curves[item] = True
 				self.mainwin.showEplotsSubMenu.GetMenuItems()[item].Check(True)
-			print self.mainwin.display_expt_curves
+			print(self.mainwin.display_expt_curves)
 
 		self.mainwin.OnCreateAxes(self.mainwin.figs[0],self.mainwin.canvases[0])
 
@@ -298,7 +298,7 @@ class PlotSelectionDialog(wx.Dialog):
 		Gets the tick box values, updates the main plot and changes 
 		the menu items to match the popup box
 		"""
-		print 'Ticked Event'
+		print('Ticked Event')
 		
 		if self.plottype == 'Theory':
 			items = self.selection.GetChecked()
@@ -308,7 +308,7 @@ class PlotSelectionDialog(wx.Dialog):
 			for item in items:
 				self.mainwin.display_theory_curves[item] = True
 				self.mainwin.showTplotsSubMenu.GetMenuItems()[item].Check(True)
-			print self.mainwin.display_theory_curves
+			print(self.mainwin.display_theory_curves)
 		elif self.plottype == 'Fit':
 			items = self.selection.GetChecked()
 			self.mainwin.display_expt_curves = [False]*9
@@ -317,7 +317,7 @@ class PlotSelectionDialog(wx.Dialog):
 			for item in items:
 				self.mainwin.display_expt_curves[item] = True
 				self.mainwin.showEplotsSubMenu.GetMenuItems()[item].Check(True)
-			print self.mainwin.display_expt_curves
+			print(self.mainwin.display_expt_curves)
 
 		self.mainwin.OnCreateAxes(self.mainwin.figs[0],self.mainwin.canvases[0])
 		
@@ -403,7 +403,7 @@ class FittingThread(threading.Thread):
 			
 			fb, xfa, yfa = None, None, None
 		
-		print 'Fitting data in the detuning range (GHz):  ',x_array[0], ' to ',x_array[-1]
+		print('Fitting data in the detuning range (GHz):  ',x_array[0], ' to ',x_array[-1])
 		mainwin.FitInformation.write('Fitting in the detuning range (GHz):  '+str(x_array[0])+' to '+str(x_array[-1]))
 		mainwin.FitInformation.write('\n\n')
 
@@ -450,7 +450,7 @@ class ProgressThread(threading.Thread):
 				#wx.CallAfter(self.pb.SetValue,i)
 				wx.CallAfter(self.pb.Update,i)
 				time.sleep(0.1)
-		print 'Quitting progress bar update'
+		print('Quitting progress bar update')
 	
 class OptionsPanel(scrolled.ScrolledPanel):
 	def __init__(self, parent, mainwin, paneltype):
@@ -741,7 +741,7 @@ class StatusPanel(scrolled.ScrolledPanel):
 		if SaveFileDialog.ShowModal() == wx.ID_OK:
 			
 			output_filename = SaveFileDialog.GetPath()
-			print output_filename
+			print(output_filename)
 			#if output_filename[-4:] == exts[SaveFileDialog.GetFilterIndex()]:
 			#	output_filename = output_filename[:-4]
 			SaveFileDialog.Destroy()
@@ -1565,7 +1565,7 @@ class ElecSus_GUI_Frame(wx.Frame):
 		## do the same rearranging for fit_bools
 		if calc_or_fit=='Fit':
 			self.fit_bools = [checkbox.IsChecked() for checkbox in panel.fit_paramlist_bools]
-			print self.fit_bools
+			print(self.fit_bools)
 			self.fit_bools_ordered = [0]*len(self.fit_bools)
 			self.re_order_bool_list = [0,1,2,8,7,5,6,3,4,9,10]
 			for i, el in enumerate(self.re_order_bool_list):
@@ -1574,10 +1574,10 @@ class ElecSus_GUI_Frame(wx.Frame):
 		
 		## Finally, actually call ElecSus!
 		if calc_or_fit == 'Theory':
-			print '\n\n'
-			print time.ctime()
-			print 'Calling ElecSus for single calculation with parameters:'
-			print self.params
+			print('\n\n')
+			print(time.ctime())
+			print('Calling ElecSus for single calculation with parameters:')
+			print(self.params)
 			
 			spectrum_data = elecsus.calculate(self.x_array,self.params)
 			self.y_arrays[0:4] = spectrum_data[0:4] #S0,S1,S2,S3
@@ -1597,11 +1597,11 @@ class ElecSus_GUI_Frame(wx.Frame):
 		elif calc_or_fit == 'Fit':
 			### Use another thread for running elecsus fitting so the main panel doesn't stop responding
 			if not self.already_fitting:
-				print '\n\n'
-				print time.ctime()
-				print 'Calling ElecSus for fitting data with initial parameters:'
-				print self.params
-				print self.fit_bools_ordered
+				print('\n\n')
+				print(time.ctime())
+				print('Calling ElecSus for fitting data with initial parameters:')
+				print(self.params)
+				print(self.fit_bools_ordered)
 				
 				## log time, data set to be fitted, initial parameters on the 'Fit Info' notebook:
 				font1 = wx.Font(10, wx.TELETYPE, wx.NORMAL, wx.NORMAL)#, False, u'Consolas')
@@ -1658,7 +1658,7 @@ class ElecSus_GUI_Frame(wx.Frame):
 			elif order==2:
 				tp.SetValue(fp.GetValue())
 				
-		print 'Parameters Copied'
+		print('Parameters Copied')
 			
 	def GetCurrentAxesLimits(self,fig):
 		displayed_axes = [i|j for i,j in \
@@ -1694,7 +1694,7 @@ class ElecSus_GUI_Frame(wx.Frame):
 		# Show() rather than ShowModal() - doesn't halt program flow
 		if dlg.ShowModal() == wx.ID_OK:
 			self.advanced_fitoptions = dlg.return_all_options()
-			print self.advanced_fitoptions
+			print(self.advanced_fitoptions)
 
 	def OnAutoscale(self,event):
 		self.Autoscale = bool(event.Checked())
@@ -1801,9 +1801,9 @@ class ElecSus_GUI_Frame(wx.Frame):
 		
 		fig.clf()
 		
-		print 'Debugging...'
-		print self.fit_datatype
-		print self.y_optimised
+		print('Debugging...')
+		print(self.fit_datatype)
+		print(self.y_optimised)
 		
 		#normalised_residuals = False
 		if self.normalised_residuals:
@@ -1835,7 +1835,7 @@ class ElecSus_GUI_Frame(wx.Frame):
 		ax_main.set_ylabel(self.expt_type)
 		
 		ax_main.plot(self.x_fit_array,self.y_fit_array,color=d_olive)
-		print len(self.x_fit_array), len(self.y_optimised)
+		print(len(self.x_fit_array), len(self.y_optimised))
 		ax_main.plot(self.x_fit_array,self.y_optimised)
 		ax_residual.plot(self.x_fit_array,residuals,lw=1.25)
 		ax_residual.axhline(0,color='k',linestyle='dashed')
@@ -1975,10 +1975,10 @@ class ElecSus_GUI_Frame(wx.Frame):
 		
 		
 		# use fitted parameters to calculate new theory arrays
-		print '\n\n'
-		print time.ctime()
-		print 'Calling ElecSus for single calculation with optimised parameters:'
-		print self.opt_params_new
+		print('\n\n')
+		print(time.ctime())
+		print('Calling ElecSus for single calculation with optimised parameters:')
+		print(self.opt_params_new)
 		
 		self.y_optimised = elecsus.calculate(self.x_fit_array,self.opt_params,OutputType=self.fit_datatype)
 		spectrum_data = elecsus.calculate(self.x_array,self.opt_params)
@@ -2003,7 +2003,7 @@ class ElecSus_GUI_Frame(wx.Frame):
 
 		# update the figure
 		self.OnCreateAxes(self.figs[0],self.canvases[0])			
-		print 'Updating main plot...'
+		print('Updating main plot...')
 		
 		# ask whether to update the initial fitting parameters
 		dlg = wx.MessageDialog(self, 
@@ -2031,13 +2031,13 @@ class ElecSus_GUI_Frame(wx.Frame):
 	def OnFitTypeChangePanel(self,event):
 		""" Action to perform when fit type is changed """
 		#print self.fittypeSubMenu.GetMenuItems()
-		print ''
+		print('')
 		for panelitem in self.FitPanel.fit_types:
 			if panelitem.GetValue():
 				self.fit_algorithm = panelitem.GetLabel()
 				#self.fittypeSubMenu.Check(idfit,True)
 				#self.OnFitTypeChangeMenu(1)
-				print 'Fit Algorithm changed to:', self.fit_algorithm
+				print('Fit Algorithm changed to:', self.fit_algorithm)
 
 			#self.fittypeSubMenu.Check(idfit,False)
 			#print menuitem.IsChecked()
@@ -2160,7 +2160,7 @@ class ElecSus_GUI_Frame(wx.Frame):
 			output_filename = SaveFileDialog.GetPath()
 			SaveFileDialog.Destroy()
 			
-			print output_filename
+			print(output_filename)
 			
 			# don't need this - FD_OVERWRITE_PROMPT does the same job
 			#check for overwrite current files
@@ -2251,9 +2251,9 @@ class ElecSus_GUI_Frame(wx.Frame):
 		"""
 		#print len(self.y_arrays)
 		#print self.y_arrays
-		xy_data = zip(self.x_array,self.y_arrays[0],self.y_arrays[1],self.y_arrays[2],self.y_arrays[3],\
+		xy_data = list(zip(self.x_array,self.y_arrays[0],self.y_arrays[1],self.y_arrays[2],self.y_arrays[3],\
 			self.y_arrays[4][0], self.y_arrays[4][1], self.y_arrays[5][0], self.y_arrays[5][1], \
-			self.y_arrays[6][0], self.y_arrays[6][1], self.y_arrays[7][0], self.y_arrays[7][1], self.y_arrays[8])
+			self.y_arrays[6][0], self.y_arrays[6][1], self.y_arrays[7][0], self.y_arrays[7][1], self.y_arrays[8]))
 		success = write_CSV(xy_data, filename, titles=['Detuning']+OutputTypes)
 		if not success:
 			problem_dlg = wx.MessageDialog(self, "There was an error saving the data...", "Error saving", wx.OK|wx.ICON_ERROR)
@@ -2315,7 +2315,7 @@ def write_CSV(xy,filename,titles=None):
 	
 ## Run the thing...
 def start():
-	print 'Starting ElecSus GUI...'
+	print('Starting ElecSus GUI...')
 	global app
 	app = wx.App(redirect=False)
 	frame = ElecSus_GUI_Frame(None,"ElecSus GUI")
@@ -2323,7 +2323,7 @@ def start():
 	frame.Centre()
 	frame.Show()
 	app.MainLoop()
-	print '...Closed ElecSus GUI'
+	print('...Closed ElecSus GUI')
 
 if __name__ == '__main__':
 	start()
